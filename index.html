@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>拾光 · 信息搜集与数据处理</title>
+<meta name="description" content="一个关于信息搜集、数据处理、AI智能体与芯片投资观察的个人知识网站。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>
+  :root{
+    --bg:#f6f8fb;
+    --card:#ffffff;
+    --ink:#1b2530;
+    --sub:#5b6b7b;
+    --primary:#0f7bff;
+    --primary-soft:#e6f0ff;
+    --accent:#ff8a2a;
+    --accent-soft:#fff1e4;
+    --green:#16a34a;
+    --green-soft:#e7f7ed;
+    --purple:#7c5cff;
+    --purple-soft:#f0ecff;
+    --line:#e7ecf2;
+    --radius:18px;
+    --shadow:0 10px 30px rgba(20,40,80,.06);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",Roboto,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{text-decoration:none;color:inherit}
+
+  /* ---------- 顶部导航 ---------- */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(255,255,255,.82);backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{
+    max-width:1100px;margin:0 auto;padding:0 22px;height:64px;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px}
+  .logo .dot{width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent))}
+  .menu{display:flex;gap:26px;font-size:15px;font-weight:600}
+  .menu a{color:var(--sub);transition:color .2s;padding:6px 2px}
+  .menu a:hover,.menu a.active{color:var(--primary)}
+  .burger{display:none;cursor:pointer;font-size:24px;border:none;background:none;color:var(--ink)}
+  @media(max-width:860px){
+    .menu{display:none;position:absolute;top:64px;left:0;right:0;background:#fff;flex-direction:column;padding:14px 24px;gap:16px;border-bottom:1px solid var(--line)}
+    .menu.open{display:flex}
+    .burger{display:block}
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    max-width:1100px;margin:0 auto;padding:70px 22px 50px;
+    display:grid;grid-template-columns:1.2fr .8fr;gap:40px;align-items:center;
+  }
+  .hero .kicker{
+    display:inline-block;background:var(--primary-soft);color:var(--primary);
+    padding:6px 14px;border-radius:30px;font-size:13px;font-weight:700;margin-bottom:18px;
+  }
+  .hero h1{font-size:44px;line-height:1.2;font-weight:900;letter-spacing:-.5px;margin-bottom:18px}
+  .hero h1 .hl{background:linear-gradient(120deg,var(--primary),var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p.sub{font-size:17px;color:var(--sub);max-width:520px;margin-bottom:28px}
+  .hero .cta{display:flex;gap:14px;flex-wrap:wrap}
+  .btn{padding:12px 24px;border-radius:40px;font-weight:700;font-size:15px;transition:.2s;cursor:pointer}
+  .btn-primary{background:var(--primary);color:#fff;box-shadow:0 8px 20px rgba(15,123,255,.3)}
+  .btn-primary:hover{transform:translateY(-2px)}
+  .btn-ghost{border:1.5px solid var(--line);color:var(--ink);background:#fff}
+  .btn-ghost:hover{border-color:var(--primary);color:var(--primary)}
+  .hero .badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+  .hero .badges span{font-size:13px;color:var(--sub);background:#fff;border:1px solid var(--line);padding:6px 12px;border-radius:30px}
+  .hero-visual{
+    background:linear-gradient(145deg,#eef4ff,#f8efff);
+    border-radius:24px;padding:34px;box-shadow:var(--shadow);
+    display:flex;flex-direction:column;gap:16px;min-height:300px;justify-content:center;
+  }
+  .stream{background:#fff;border-radius:14px;padding:16px;box-shadow:0 4px 14px rgba(20,40,80,.05)}
+  .stream .tag{font-size:12px;font-weight:700;color:var(--green);background:var(--green-soft);padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:8px}
+  .stream .tag.purple{color:var(--purple);background:var(--purple-soft)}
+  .stream .tag.orange{color:var(--accent);background:var(--accent-soft)}
+  .stream .title{font-weight:700;font-size:15px}
+  .stream .meta{font-size:12px;color:var(--sub);margin-top:4px}
+  @media(max-width:860px){
+    .hero{grid-template-columns:1fr;padding:44px 22px 30px}
+    .hero h1{font-size:32px}
+  }
+
+  /* ---------- 通用 section ---------- */
+  section{padding:70px 22px}
+  .wrap{max-width:1100px;margin:0 auto}
+  .sec-head{margin-bottom:38px}
+  .sec-head .label{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--primary);margin-bottom:8px}
+  .sec-head h2{font-size:30px;font-weight:900;letter-spacing:-.4px}
+  .sec-head p{color:var(--sub);margin-top:8px;max-width:640px}
+
+  /* ---------- 卡片 ---------- */
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+  @media(max-width:860px){.grid3,.grid2{grid-template-columns:1fr}}
+  .card{background:var(--card);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow);border:1px solid var(--line);transition:transform .25s,box-shadow .25s}
+  .card:hover{transform:translateY(-5px);box-shadow:0 18px 40px rgba(20,40,80,.11)}
+  .card .icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:16px}
+  .ic-blue{background:var(--primary-soft)}
+  .ic-orange{background:var(--accent-soft)}
+  .ic-green{background:var(--green-soft)}
+  .ic-purple{background:var(--purple-soft)}
+  .card h3{font-size:19px;font-weight:800;margin-bottom:10px}
+  .card p{color:var(--sub);font-size:14.5px}
+  .card .chip{display:inline-block;font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;margin-bottom:12px}
+  .chip.blue{color:var(--primary);background:var(--primary-soft)}
+  .chip.orange{color:var(--accent);background:var(--accent-soft)}
+  .chip.green{color:var(--green);background:var(--green-soft)}
+  .chip.purple{color:var(--purple);background:var(--purple-soft)}
+
+  /* ---------- 时间线 ---------- */
+  .timeline{position:relative;max-width:760px;margin:0 auto;padding-left:26px}
+  .timeline:before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:2px;background:linear-gradient(180deg,var(--primary),var(--accent))}
+  .tl-item{position:relative;margin-bottom:26px}
+  .tl-item:before{content:"";position:absolute;left:-26px;top:8px;width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid var(--primary)}
+  .tl-item .when{font-size:13px;font-weight:700;color:var(--primary);margin-bottom:4px}
+  .tl-item h4{font-size:17px;font-weight:800;margin-bottom:4px}
+  .tl-item p{color:var(--sub);font-size:14.5px}
+
+  /* ---------- 资讯 ---------- */
+  .news{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  @media(max-width:860px){.news{grid-template-columns:1fr}}
+  .news-col h3{font-size:22px;font-weight:900;margin-bottom:18px;display:flex;align-items:center;gap:10px}
+  .news-col h3 .tag{font-size:12px;padding:4px 12px;border-radius:30px;font-weight:700}
+  .news-item{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:14px;transition:.2s}
+  .news-item:hover{border-color:var(--primary);box-shadow:0 6px 16px rgba(20,40,80,.07)}
+  .news-item .src{font-size:12px;color:var(--sub);font-weight:600}
+  .news-item .src b{color:var(--primary)}
+  .news-item .t{font-size:15px;font-weight:700;margin:5px 0 6px}
+  .news-item .meta{font-size:12px;color:var(--sub)}
+  .news-item .meta .hot{color:var(--accent);font-weight:700}
+
+  /* ---------- 统计条 ---------- */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:30px}
+  @media(max-width:860px){.stats{grid-template-columns:repeat(2,1fr)}}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;text-align:center}
+  .stat .num{font-size:32px;font-weight:900;color:var(--primary)}
+  .stat .lab{font-size:13px;color:var(--sub);margin-top:4px}
+
+  /* ---------- 工具箱 ---------- */
+  .tools{display:flex;flex-wrap:wrap;gap:12px}
+  .tool{background:#fff;border:1px solid var(--line);border-radius:30px;padding:9px 18px;font-size:14px;font-weight:600;color:var(--sub)}
+  .tool b{color:var(--ink)}
+
+  /* ---------- 页脚 ---------- */
+  footer{background:#0f172a;color:#cbd5e1;padding:44px 22px;margin-top:40px}
+  .foot{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+  .foot .brand{font-weight:800;color:#fff;font-size:18px}
+  .foot .brand span{color:var(--accent)}
+  .foot .links{display:flex;gap:20px;font-size:14px}
+  .foot .links a:hover{color:#fff}
+  .copyright{font-size:12.5px;color:#94a3b8;margin-top:14px}
+
+  /* 回到顶部 */
+  .topbtn{position:fixed;right:22px;bottom:22px;width:44px;height:44px;border-radius:50%;background:var(--primary);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 8px 20px rgba(15,123,255,.35);opacity:0;pointer-events:none;transition:.3s}
+  .topbtn.show{opacity:1;pointer-events:auto}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="logo"><span class="dot"></span>拾光·InfoKit</div>
+    <nav class="menu" id="menu">
+      <a href="#home" class="active">首页</a>
+      <a href="#collect">信息搜集</a>
+      <a href="#data">数据处理</a>
+      <a href="#ai">AI智能体</a>
+      <a href="#chip">芯片投资</a>
+      <a href="#edu">升学我做主</a>
+      <a href="#about">关于</a>
+    </nav>
+    <button class="burger" id="burger">☰</button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section id="home" class="hero">
+  <div>
+    <span class="kicker">✦ 个人知识网站</span>
+    <h1>信息搜集 · 数据处理<br><span class="hl">AI智能体 & 芯片投资观察</span></h1>
+    <p class="sub">这里沉淀了一套关于「如何高效地找到信息、看懂数据」的方法论与工具，并持续追踪 AI 智能体行业与芯片投资的行业动态。</p>
+    <div class="cta">
+      <a href="#collect" class="btn btn-primary">开始探索 →</a>
+      <a href="#about" class="btn btn-ghost">关于本站</a>
+    </div>
+    <div class="badges">
+      <span>🔍 信息猎手</span>
+      <span>📊 数据分析</span>
+      <span>🤖 AI 智能体</span>
+      <span>💎 芯片投资</span>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="stream"><span class="tag">🔍 信息搜集</span><div class="title">「追踪今日热点」定时抓取 → 结构化入库</div><div class="meta">已完成 · 2 分钟前更新</div></div>
+    <div class="stream"><span class="tag purple">🤖 AI 智能体</span><div class="title">Claude / GPT / 开源 Agent 框架对比</div><div class="meta">行业观察 · 今日新增 3 篇</div></div>
+    <div class="stream"><span class="tag orange">💎 芯片投资</span><div class="title">先进制程与国产算力产业链跟踪</div><div class="meta">市场快报 · 今日新增 2 篇</div></div>
+  </div>
+</section>
+
+<!-- 核心能力 -->
+<section id="about-skills" style="padding-top:10px">
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat"><div class="num">120+</div><div class="lab">信息源覆盖</div></div>
+      <div class="stat"><div class="num">50+</div><div class="lab">数据处理模板</div></div>
+      <div class="stat"><div class="num">4</div><div class="lab">核心栏目</div></div>
+      <div class="stat"><div class="num">7×24</div><div class="lab">热点追踪</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 信息搜集 -->
+<section id="collect">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="label">Method · 方法论</div>
+      <h2>信息搜集体系</h2>
+      <p>从「找什么」到「怎么找」，再到「如何沉淀」，一套完整的信息搜集工作流。</p>
+    </div>
+    <div class="grid3">
+      <div class="card">
+        <div class="icon ic-blue">🔍</div>
+        <span class="chip blue">STEP 1</span>
+        <h3>需求分析</h3>
+        <p>先定义信息目标：要解决什么问题？需要什么精度？确定关键词体系与检索范围，避免盲目搜索。</p>
+      </div>
+      <div class="card">
+        <div class="icon ic-green">🗂️</div>
+        <span class="chip green">STEP 2</span>
+        <h3>多源采集</h3>
+        <p>组合使用搜索引擎、官方数据、行业报告、社交媒体与 API 抓取，交叉验证信息真实性。</p>
+      </div>
+      <div class="card">
+        <div class="icon ic-purple">🧠</div>
+        <span class="chip purple">STEP 3</span>
+        <h3>沉淀复用</h3>
+        <p>把零散信息结构化存入知识库，打标签、建索引，让每次投入都能被长期复用。</p>
+      </div>
+    </div>
+
+    <div class="sec-head" style="margin-top:56px">
+      <h2 style="font-size:22px">常用信息源</h2>
+    </div>
+    <div class="tools">
+      <span class="tool">🔎 通用搜索 <b>· 百度 / Google / Bing / 小艺搜索</b></span>
+      <span class="tool">📰 新闻聚合 <b>· 公众号 / 头条 / RSS</b></span>
+      <span class="tool">📊 数据平台 <b>· 统计局 / Wind / 各行业数据库</b></span>
+      <span class="tool">💬 社交舆情 <b>· 微博 / 小红书 / X</b></span>
+      <span class="tool">📄 学术 <b>· arXiv / 知网 / 论文库</b></span>
+      <span class="tool">🛠️ 自动化 <b>· Python 爬虫 / 定时任务</b></span>
+    </div>
+  </div>
+</section>
+
+<!-- 数据处理 -->
+<section id="data" style="background:#eff4fb">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="label" style="color:var(--accent)">Toolkit · 工具箱</div>
+      <h2>数据处理工作台</h2>
+      <p>把原始信息变成可读、可用的数据：清洗 → 分析 → 可视化，一整套实战流程。</p>
+    </div>
+    <div class="grid3">
+      <div class="card">
+        <div class="icon ic-blue">🧹</div>
+        <h3>数据清洗</h3>
+        <p>去重、去噪、缺失值处理、格式统一。用 Pandas 与正则表达式把脏数据变成干净表格。</p>
+      </div>
+      <div class="card">
+        <div class="icon ic-orange">📊</div>
+        <h3>数据可视化</h3>
+        <p>用 matplotlib / ECharts / 表格透视，把数据变成一眼能看懂的图表与报表。</p>
+      </div>
+      <div class="card">
+        <div class="icon ic-green">🤖</div>
+        <h3>AI 辅助分析</h3>
+        <p>让 AI 智能体帮你写清洗脚本、生成代码、归纳报告，效率翻倍。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 资讯：AI 智能体 -->
+<section id="ai">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="label">Dispatch · 情报速递</div>
+      <h2>行业追踪</h2>
+      <p>两个高频关注的方向：AI 智能体的技术演进，以及芯片 / 半导体领域的投资机会。</p>
+    </div>
+    <div class="news">
+      <div class="news-col">
+        <h3>🤖 AI 智能体新闻 <span class="tag" style="background:var(--purple-soft);color:var(--purple)">LIVE</span></h3>
+        <div class="news-item">
+          <div class="src">行业快讯 · <b>Agent 生态</b></div>
+          <div class="t">多模态 Agent 进入「任务编排」时代，端到端自动化成为新风口</div>
+          <div class="meta"><span class="hot">🔥 热门</span> · 今日 09:02</div>
+        </div>
+        <div class="news-item">
+          <div class="src">技术动态 · <b>框架对比</b></div>
+          <div class="t">开源 Agent 框架（LangChain / AutoGen / 自研）能力与适用场景梳理</div>
+          <div class="meta">更新 · 昨日 18:40</div>
+        </div>
+        <div class="news-item">
+          <div class="src">应用观察 · <b>落地案例</b></div>
+          <div class="t">企业级智能体在客服、投研、运营场景的降本增效实测</div>
+          <div class="meta">深度 · 本周</div>
+        </div>
+      </div>
+      <div class="news-col">
+        <h3>💎 芯片投资观察 <span class="tag" style="background:var(--accent-soft);color:var(--accent)">MARKET</span></h3>
+        <div class="news-item">
+          <div class="src">产业跟踪 · <b>先进制程</b></div>
+          <div class="t">国产算力芯片放量，先进封装与 HBM 产业链景气度上行</div>
+          <div class="meta"><span class="hot">🚀 热点</span> · 今日 08:15</div>
+        </div>
+        <div class="news-item">
+          <div class="src">投资研究 · <b>产业链</b></div>
+          <div class="t">从设备、材料到设计、封测，半导体全环节投资地图更新</div>
+          <div class="meta">研报 · 昨日</div>
+        </div>
+        <div class="news-item">
+          <div class="src">数据速览 · <b>市场指标</b></div>
+          <div class="t">算力需求驱动下，存储与光模块相关上市公司业绩跟踪</div>
+          <div class="meta">数据 · 本周</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 升学我做主 -->
+<section id="edu">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="label" style="color:var(--green)">升学 · Education</div>
+      <h2>升学我做主 🎓</h2>
+      <p>高考、考研、留学到专业选择与志愿填报，把升学这件大事的主动权把握在自己手里。</p>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <div class="icon ic-green">📌</div>
+        <span class="chip green">政策动态</span>
+        <h3>招考政策跟踪</h3>
+        <p>持续更新高考、考研、留学相关政策变化，第一时间掌握报考规则与重要时间节点。</p>
+      </div>
+      <div class="card">
+        <div class="icon ic-blue">🏫</div>
+        <span class="chip blue">院校专业</span>
+        <h3>院校与专业解读</h3>
+        <p>梳理高校实力、专业前景与就业方向，帮你选定真正适合自己的目标院校与专业。</p>
+      </div>
+      <div class="card">
+        <div class="icon ic-orange">📖</div>
+        <span class="chip orange">备考干货</span>
+        <h3>备考方法与经验</h3>
+        <p>整理高效学习方法、时间规划与过来人备考经验，让每一分努力都更有方向。</p>
+      </div>
+      <div class="card">
+        <div class="icon ic-purple">📊</div>
+        <span class="chip purple">数据参考</span>
+        <h3>分数线与志愿数据</h3>
+        <p>沉淀历年录取数据、分数线与招生计划，用数据辅助科学填报志愿。</p>
+      </div>
+    </div>
+    <div class="news" style="margin-top:28px">
+      <div class="news-col">
+        <h3 style="font-size:18px">🗓️ 近期重要节点</h3>
+        <div class="news-item"><div class="src">高考 · <b>备考</b></div><div class="t">百日冲刺计划与一轮复习时间轴参考</div></div>
+        <div class="news-item"><div class="src">考研 · <b>择校</b></div><div class="t">热门院校报录比与专业方向分析</div></div>
+      </div>
+      <div class="news-col">
+        <h3 style="font-size:18px">🌏 升学资讯速递</h3>
+        <div class="news-item"><div class="src">留学 · <b>政策</b></div><div class="t">热门留学目的地签证与申请动态汇总</div></div>
+        <div class="news-item"><div class="src">志愿 · <b>填报</b></div><div class="t">平行志愿填报策略与常见误区提醒</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 成长时间线 -->
+<section id="growth" style="background:#eff4fb">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="label" style="color:var(--green)">Growth · 成长</div>
+      <h2>网站演进计划</h2>
+      <p>这个个人网站会持续迭代，以下是规划中的升级路线。</p>
+    </div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="when">V1.0 · 已上线</div>
+        <h4>栏目框架搭建</h4>
+        <p>确立信息搜集、数据处理、AI 智能体、芯片投资四大栏目，形成知识骨架。</p>
+      </div>
+      <div class="tl-item">
+        <div class="when">V1.1 · 规划中</div>
+        <h4>内容沉淀与数据接入</h4>
+        <p>补充方法论文章、工具教程，接入自动化信息抓取与数据可视化看板。</p>
+      </div>
+      <div class="tl-item">
+        <div class="when">V2.0 · 长期目标</div>
+        <h4>多页化与交互升级</h4>
+        <p>扩展为独立多页站点，支持搜索、标签、评论与个性化订阅。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 关于 -->
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="label">About · 关于</div>
+      <h2>关于本站</h2>
+      <p>一个关于「信息搜集与数据处理」的个人知识空间，记录学习、工具与实践，也追踪科技与投资前沿。</p>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <div class="icon ic-green">🎯</div>
+        <h3>本站愿景</h3>
+        <p>把「如何高效获取和利用信息」这一套能力，变成可持续沉淀、可复用的知识资产，并分享给更多对信息、数据、AI 感兴趣的人。</p>
+      </div>
+      <div class="card">
+        <div class="icon ic-orange">🛠️</div>
+        <h3>技术栈</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px">
+          <span class="tool">HTML5</span><span class="tool">CSS3</span><span class="tool">Python</span><span class="tool">Excel</span><span class="tool">AI Agent</span><span class="tool">RSS</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot">
+    <div class="brand">拾光<span>·</span>InfoKit</div>
+    <div class="links">
+      <a href="#collect">信息搜集</a>
+      <a href="#data">数据处理</a>
+      <a href="#ai">AI智能体</a>
+      <a href="#chip">芯片投资</a>
+      <a href="#edu">升学我做主</a>
+      <a href="#about">关于</a>
+    </div>
+  </div>
+  <div class="foot" style="margin-top:8px"><div class="copyright">© 2026 拾光·InfoKit · 个人知识网站 · 简约明快版</div></div>
+</footer>
+
+<button class="topbtn" id="topbtn" title="回到顶部">↑</button>
+
+<script>
+  // 移动端菜单
+  const burger=document.getElementById('burger');
+  const menu=document.getElementById('menu');
+  burger.addEventListener('click',()=>menu.classList.toggle('open'));
+  // 导航高亮
+  const links=menu.querySelectorAll('a');
+  window.addEventListener('scroll',()=>{
+    let cur='home';
+    ['home','collect','data','ai','chip','edu','about'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el&&el.getBoundingClientRect().top<=120)cur=id;
+    });
+    links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
+    // 回到顶部按钮
+    document.getElementById('topbtn').classList.toggle('show',window.scrollY>500);
+  });
+  document.getElementById('topbtn').addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+  // 关闭菜单
+  links.forEach(a=>a.addEventListener('click',()=>menu.classList.remove('open')));
+</script>
+</body>
+</html>
